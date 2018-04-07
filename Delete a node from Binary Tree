@@ -1,0 +1,62 @@
+//Complete Binary tree deletion implementation for all possible cases
+
+public boolean delete(Node nodeToDelete) {
+    boolean succes = false;
+    Node nodeToRemove = findTheNodeToDelete(nodeToDelete);
+    if (nodeToRemove == null) {
+        return succes;
+    }
+    // case1: If the node has no children
+    if (nodeToRemove.left == null && nodeToRemove.right == null) {
+        if (nodeToRemove.parent.left.data == nodeToDelete.data) {
+            nodeToRemove.parent.left = null;
+            nodeToRemove = null;
+            succes = true;
+            return succes;
+        } else if (nodeToRemove.parent.right.data == nodeToDelete.data) {
+            nodeToRemove.parent.right = null;
+            nodeToRemove = null;
+            succes = true;
+            return succes;
+    }
+        // case 2: If it has only one children
+    } else if ((nodeToRemove.left == null && nodeToRemove.right != null)
+            || (nodeToRemove.right == null && nodeToRemove.left != null)) {
+        if (nodeToRemove.left != null) {
+            nodeToRemove.parent.left = nodeToDelete.left;
+            nodeToDelete = null;
+            succes = true;
+            return succes;
+          } else if (nodeToRemove.parent.right != null) {
+            nodeToRemove.parent.right = null;
+            nodeToRemove = null;
+            succes = true;
+            return succes;
+        }
+    }
+    // case 3 :If it has two children
+    if (nodeToRemove.left != null && nodeToRemove.right != null) {
+    Node minLeftNode = findTheLeftMostNodeFromtheRightSubTree(nodeToRemove.right);
+        System.out.println("----" + minLeftNode.data);
+        minLeftNode.parent.left = null;
+        minLeftNode.parent = null;
+        Node parentofTheNodeToDelete = nodeToRemove.parent;
+        minLeftNode.parent = parentofTheNodeToDelete;
+        Node rightOfNodeToDelete = nodeToRemove.right;
+        Node leftofNodeToDelete = nodeToRemove.left;
+        if (parentofTheNodeToDelete == null) {
+            root = minLeftNode;
+        } else {
+            if (parentofTheNodeToDelete.right.data == nodeToDelete.data) {
+                parentofTheNodeToDelete.right = minLeftNode;
+           } else if (parentofTheNodeToDelete.left.data == nodeToDelete.data) {
+                parentofTheNodeToDelete.left = minLeftNode;
+          }
+        }
+        minLeftNode.right = rightOfNodeToDelete;
+        minLeftNode.left = leftofNodeToDelete;
+        nodeToRemove = null;
+    }
+  return succes;
+}
+
